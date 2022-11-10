@@ -136,8 +136,9 @@ func (g *CodeGenerator) generate() {
 		rule := ruleSet[k]
 
 		g.ln()
-		g.c("%s = %s", rule.name, rule.operator.Key())
-		g.wf("func %s(", formatRuleName(rule.name))
+		rn := formatRuleName(rule.name)
+		g.c("%s validates %s = %s", rn, rule.name, rule.operator.Key())
+		g.wf("func %s(", rn)
 		if g.isOperator {
 			g.wln(") operators.Operator {")
 		} else {
@@ -238,12 +239,14 @@ func (value NumericValueOperator) generate(g *CodeGenerator) {
 		min, max := values[0], values[1]
 		var minValues string
 		for _, v := range min {
-			minValues = strconv.Itoa(v)
+			minValues += strconv.Itoa(v) + ", "
 		}
+		minValues = minValues[:len(minValues)-2]
 		var maxValues string
 		for _, v := range max {
-			maxValues = strconv.Itoa(v)
+			maxValues += strconv.Itoa(v) + ", "
 		}
+		maxValues = maxValues[:len(maxValues)-2]
 		g.wf("operators.Range(%q, []byte{%s}, []byte{%s})", g.syn(value.key), minValues, maxValues)
 	} else if value.points {
 		var str string
