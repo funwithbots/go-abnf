@@ -241,12 +241,19 @@ func (value NumericValueOperator) generate(g *CodeGenerator) {
 		for _, v := range min {
 			minValues += strconv.Itoa(v) + ", "
 		}
-		minValues = minValues[:len(minValues)-2]
+		if minValues != "" {
+			minValues = minValues[:len(minValues)-2]
+		}
+
 		var maxValues string
 		for _, v := range max {
 			maxValues += strconv.Itoa(v) + ", "
 		}
+		if maxValues != "" {
+			
+		}
 		maxValues = maxValues[:len(maxValues)-2]
+
 		g.wf("operators.Range(%q, []byte{%s}, []byte{%s})", g.syn(value.key), minValues, maxValues)
 	} else if value.points {
 		var str string
